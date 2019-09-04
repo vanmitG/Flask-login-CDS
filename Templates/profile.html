@@ -1,0 +1,26 @@
+{% extends "layout.html" %} {% block title %}Profile{% endblock %} {% block head
+%}
+{{ super() }}
+<!--Import Google Icon Font-->
+<link
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet"
+/>
+<!--Import materialize.css-->
+<!-- Compiled and minified CSS -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+/>
+{% endblock %} {% block content %}
+<h1>Welcome {{ current_user.email }}</h1>
+<p>
+  Welcome on my awesome homepage. Lorem ipsum dolor sit amet consectetur
+  adipisicing elit. Nobis provident, architecto enim impedit molestiae deserunt
+  voluptatum veritatis, adipisci aspernatur corporis libero. Ratione modi
+  provident et porro laudantium exercitationem consectetur delectus.
+</p>
+<a class="btn btn-large waves-effect waves-light" href="{{ url_for('logout') }}"
+  >Logout</a
+>
+{% endblock %}
