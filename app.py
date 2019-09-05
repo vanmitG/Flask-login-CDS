@@ -9,16 +9,19 @@ app.config['SECRET_KEY'] = "KhoaTheBestDestroyer"
 login = LoginManager(app)
 login.login_view = "loginf"
 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # first_name = db.Column(db.String(128))
-    # last_name = db.Column(db.String(128))
+    first_name = db.Column(db.String(80))
+    last_name = db.Column(db.String(80))
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
+    created_date = db.Column(db.DateTime, default=datetime.now)
+    updated_date = db.Column(db.DateTime, default=datetime.now)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -70,9 +73,20 @@ def logout():
     return redirect(url_for('loginf'))
 
 
-@app.route('/signup')
+@app.route('/signup', methods=['POST', 'GET'])
 def signup():
-    return render_template('signup.html')
+    if request.method == "POST":
+        new_user = User(first_name=request.form["first_name"],
+                        last_name=request.form["last_name"], email=request.form["email"])
+        new_user.set_password(request.form["password"])
+        db.session.add(new_user)
+        db.session.commit()
+        flash(
+            f'Successfuly sign up {new_user.email}. Please Login!!!', 'success')
+        return redirect(url_for('loginf'))
+    else:
+        flash('Please sign up!!!')
+        return render_template('signup.html')
 
 
 if __name__ == '__main__':
